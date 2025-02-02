@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduTrack - Home</title>
+</head>
+<body>
+    <h1>EduTrack System</h1>
+    
+    <h2>Students</h2>
+    <form action="/students" method="POST">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <button type="submit">Add Student</button>
+    </form>
+
+    <h3>All Students:</h3>
+    <ul id="student-list">
+        <!-- This will be dynamically populated -->
+    </ul>
+
+    <h2>Courses</h2>
+    <form action="/courses" method="POST">
+        <label for="course_name">Course Name:</label>
+        <input type="text" id="course_name" name="course_name" required>
+        <label for="course_desc">Course Description:</label>
+        <input type="text" id="course_desc" name="course_desc" required>
+        <button type="submit">Add Course</button>
+    </form>
+
+    <h3>All Courses:</h3>
+    <ul id="course-list">
+        <!-- This will be dynamically populated -->
+    </ul>
+
+    <h2>Grades</h2>
+    <form action="/grades" method="POST">
+        <label for="student_name">Student Name:</label>
+        <input type="text" id="student_name" name="student_name" required>
+        <label for="course_name">Course Name:</label>
+        <input type="text" id="course_name" name="course_name" required>
+        <label for="grade">Grade:</label>
+        <input type="text" id="grade" name="grade" required>
+        <button type="submit">Assign Grade</button>
+    </form>
+
+    <h3>All Grades:</h3>
+    <ul id="grade-list">
+        <!-- This will be dynamically populated -->
+    </ul>
+
+    <script>
+        // Fetch the data (students, courses, grades) and display on page load
+        async function fetchData() {
+            const studentsRes = await fetch('/students');
+            const students = await studentsRes.json();
+            const coursesRes = await fetch('/courses');
+            const courses = await coursesRes.json();
+            const gradesRes = await fetch('/grades');
+            const grades = await gradesRes.json();
+
+            // Display students
+            const studentList = document.getElementById('student-list');
+            students.forEach(student => {
+                const li = document.createElement('li');
+                li.textContent = `${student.name} (${student.email})`;
+                studentList.appendChild(li);
+            });
+
+            // Display courses
+            const courseList = document.getElementById('course-list');
+            courses.forEach(course => {
+                const li = document.createElement('li');
+                li.textContent = `${course.name}: ${course.description}`;
+                courseList.appendChild(li);
+            });
+
+            // Display grades
+            const gradeList = document.getElementById('grade-list');
+            grades.forEach(grade => {
+                const li = document.createElement('li');
+                li.textContent = `${grade.student} - ${grade.course}: ${grade.grade}`;
+                gradeList.appendChild(li);
+            });
+        }
+
+        // Call the function on page load
+        window.onload = fetchData;
+    </script>
+</body>
+</html>
